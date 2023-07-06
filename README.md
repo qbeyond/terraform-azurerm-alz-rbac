@@ -48,8 +48,8 @@ module "alz_rbac" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.15.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.77.0 |
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.39.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.63.0 |
 
 ## Inputs
 
@@ -57,7 +57,7 @@ module "alz_rbac" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_custom_assignments"></a> [custom\_assignments](#input\_custom\_assignments) | <pre>"<group_name>" = {<br>    pim_enabled         = optional(list(string))    (list of service principals that should be added as members) <br>    "<role_identifier>" = list(string)              (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br>}</pre> | `map(map(list(string)))` | `{}` | no |
 | <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | <pre>[<br>  "<management_group_name>" = "<management_group_id>"    (list of management groups to recieve default group assignments) <br>]</pre> | `map(string)` | `{}` | no |
-| <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | <pre>[<br>  "<management_group_name>" = "<management_group_id>"    (list of subscriptions to recieve default group assignments) <br>]</pre> | `map(string)` | `{}` | no |
+| <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | <pre>[<br>  "<subscription_displayName>" = "<subscription_group_id>"    (list of subscriptions to recieve default group assignments) <br>]</pre> | `map(string)` | `{}` | no |
 ## Outputs
 
 | Name | Description |

@@ -3,7 +3,7 @@ variable "subscriptions" {
   description = <<-DOC
   ```
   [
-    "<subscription_displayName>" = "<subscription_group_id>"    (list of subscriptions to recieve default group assignments) 
+    "<subscription_name>" = "<subscription_id>"    (list of subscriptions to recieve default group assignments) 
   ]
   ```
   DOC
@@ -11,7 +11,9 @@ variable "subscriptions" {
 }
 
 variable "management_groups" {
-  type        = map(string)
+  type = map(object({
+    display_name = string
+  }))
   description = <<-DOC
   ```
   [

@@ -25,7 +25,9 @@ locals {
     "${data.azurerm_subscription.current.display_name}" = "${data.azurerm_subscription.current.subscription_id}"
   }
   managements_map = {
-    "New" = "new"
+    "new" = {
+      display_name = "New"
+    }
   }
 }
 

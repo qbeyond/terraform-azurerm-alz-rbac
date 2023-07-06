@@ -1,6 +1,12 @@
 variable "subscriptions" {
-  type        = map(list(string))
+  type        = map(string)
   description = "list of subscriptions to recieve default group assignments"
+  default     = {}
+}
+
+variable "management_groups" {
+  type        = map(string)
+  description = "list of management groups to recieve default group assignments"
   default     = {}
 }
 

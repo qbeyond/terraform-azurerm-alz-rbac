@@ -3,7 +3,7 @@ variable "subscriptions" {
   description = <<-DOC
   ```
   [
-    "<management_group_name>" = "<management_group_id>"    (list of subscriptions to recieve default group assignments) 
+    "<subscription_displayName>" = "<subscription_group_id>"    (list of subscriptions to recieve default group assignments) 
   ]
   ```
   DOC

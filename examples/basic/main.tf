@@ -1,8 +1,4 @@
 provider "azurerm" {
-  skip_provider_registration = true
-  features {
-
-  }
 }
 
 data "azurerm_subscription" "current" {
@@ -11,9 +7,11 @@ data "azurerm_subscription" "current" {
 locals {
   subscriptions_map = {
     "${data.azurerm_subscription.current.display_name}" = "${data.azurerm_subscription.current.subscription_id}"
+    "<displayName>"                                     = "<subscription_id>"
   }
   managements_map = {
-    "Legacy" = "Legacy"
+    "New"           = "new"
+    "<displayName>" = "<id>"
   }
 }
 
@@ -29,8 +27,4 @@ module "alz_rbac" {
       "Owner"     = ["mg:ALZ"]
     }
   }
-
-  pim_enabled_groups = [
-    "AMG_Root_Owner"
-  ]
 }

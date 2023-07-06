@@ -6,7 +6,7 @@ variable "subscriptions" {
 
 variable "management_groups" {
   type        = map(string)
-  description = "list of management groups to recieve default group assignments"
+  description = "list of management groups to recieve default group assignments "
   default     = {}
 }
 
@@ -21,15 +21,4 @@ variable "group_assignments" {
   ```
   DOC
   default     = {}
-}
-
-
-variable "pim_enabled_groups" {
-  type        = list(string)
-  description = <<-DOC
-  ```
-  pim_enabled_groups = ["groupA", "groupB"]     (sets the value of assignable_to_role to true)
-  ```
-  DOC
-  default     = []
 }

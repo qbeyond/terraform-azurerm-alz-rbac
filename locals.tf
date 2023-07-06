@@ -1,6 +1,6 @@
 locals {
   group_role_assignments = merge(flatten([
-    for group, assignments in var.group_assignments : [
+    for group, assignments in var.custom_assignments : [
       for role, scopes in assignments : role != "pim_enabled" ? {
         for scope in scopes : "${group}_${role}_${scope}" => {
           scope = coalesce(

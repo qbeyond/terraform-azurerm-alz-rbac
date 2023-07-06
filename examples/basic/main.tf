@@ -1,4 +1,7 @@
 provider "azurerm" {
+  features {
+
+  }
 }
 
 data "azurerm_subscription" "current" {
@@ -7,11 +10,9 @@ data "azurerm_subscription" "current" {
 locals {
   subscriptions_map = {
     "${data.azurerm_subscription.current.display_name}" = "${data.azurerm_subscription.current.subscription_id}"
-    "<displayName>"                                     = "<subscription_id>"
   }
   managements_map = {
-    "New"           = "new"
-    "<displayName>" = "<id>"
+    "New" = "new"
   }
 }
 
@@ -21,7 +22,7 @@ module "alz_rbac" {
   subscriptions     = local.subscriptions_map
   management_groups = local.managements_map
 
-  group_assignments = {
+  custom_assignments = {
     "AMG_ALZ" = {
       pim_enabled = [true]
       "Owner"     = ["mg:ALZ"]

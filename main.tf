@@ -99,4 +99,3 @@ resource "azurerm_role_assignment" "management_readers" {
   role_definition_name = "Reader"
   principal_id         = azuread_group.management_readers[each.key].object_id
 }
-

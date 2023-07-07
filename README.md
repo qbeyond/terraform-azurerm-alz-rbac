@@ -19,7 +19,6 @@ TODO: there is currently no stage variable so this module will run into errors w
 
 ```hcl
 provider "azurerm" {
-  //skip_provider_registration = true #this is only
   features {
 
   }
@@ -67,7 +66,7 @@ module "alz_rbac" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br>    pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) <br>    "<role_assignments>" = map(list(string))       (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br>}</pre> | <pre>map(object({<br>    pim_enabled      = optional(bool)<br>    role_assignments = map(list(string))<br>  }))</pre> | `{}` | no |
+| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br>    pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) <br>    role_assignments = {<br>      "<role_ssignment>" = [<br>        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br>      ]<br>    }<br>}</pre> | <pre>map(object({<br>    pim_enabled      = optional(bool)<br>    role_assignments = map(list(string))<br>  }))</pre> | `{}` | no |
 | <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | <pre>"<management_group_id>" = {                 (this variable is reusing the structure of the management groups for custom_landing_zones from the caf module )<br>    displayName = "<management_group_name>"<br>  }</pre> | <pre>map(object({<br>    display_name = string<br>  }))</pre> | `{}` | no |
 | <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | Mapping of subscription names to subscription IDs. | `map(string)` | `{}` | no |
 ## Outputs

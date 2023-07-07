@@ -6,7 +6,7 @@ This terraform module creates Azure AD groups and role assignments for managemen
 
 The module is designed to create default groups (Owner, Contributor, and Reader) and assignments for the specified subscriptions and management groups. The module automatically generates the name of the group by prefixing it with `SUB_` for subscriptions and `AMG_` for management groups and adds the role as a suffix.
 
-The Reader and Owner groups created for subscriptions and management groups are automatically enabled for Privileged Identity Management (PIM)
+The Contributor and Owner groups created for subscriptions and management groups are automatically enabled for Privileged Identity Management (PIM)
 
 The `custom_assignments` input variable allows you to define custom groups and assignments, including the ability to enable Privileged Identity Management (PIM) for the groups.
 

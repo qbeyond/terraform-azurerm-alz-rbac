@@ -1,7 +1,7 @@
 locals {
   group_role_assignments = merge(flatten([
-    for group, assignments in var.custom_assignments : [
-      for role, scopes in assignments : role != "pim_enabled" ? {
+    for group, assignments in var.custom_groups : [
+      for role, scopes in assignments.role_assignments : role != "pim_enabled" ? {
         for scope in scopes : "${group}_${role}_${scope}" => {
           scope = coalesce(
             scope == "root" ? format("/providers/Microsoft.Management/managementGroups/%s", data.azurerm_client_config.current.tenant_id) : null,

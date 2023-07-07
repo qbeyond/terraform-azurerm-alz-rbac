@@ -1,4 +1,5 @@
 provider "azurerm" {
+  //skip_provider_registration = true #this is only
   features {
 
   }
@@ -24,10 +25,12 @@ module "alz_rbac" {
   subscriptions     = local.subscriptions_map
   management_groups = local.managements_map
 
-  custom_assignments = {
-    "AMG_ALZ" = {
+  custom_groups = {
+    "AMG_ALZ_OWNER" = {
       pim_enabled = true
-      "Owner"     = ["mg:ALZ"]
+      role_assignments = {
+        "Owner" = ["mg:alz"]
+      }
     }
   }
 }

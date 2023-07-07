@@ -18,22 +18,25 @@ variable "management_groups" {
   default     = {}
 }
 
-variable "custom_assignments" {
+variable "custom_groups" {
   type = map(object({
-    pim_enabled      = optional(string)
-    role_identifiers = list(string)
+    pim_enabled      = optional(bool)
+    role_assignments = map(list(string))
   }))
   description = <<-DOC
   ```
   "<group_name>" = {
     pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) 
-    "<role_identifier>" = list(string)        (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
+    "<role_assignments>" = map(list(string))       (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
 }
   ```
   DOC
   default     = {}
   validation {
-    condition     = can(regex("^AMG_|^SUB_", keys(var.custom_assignments)))
+    condition = can(length([
+      for group_key, group in var.custom_groups :
+      regex("^AMG_|^SUB_", group_key) == null ? 0 : 1
+    ]) == length(var.custom_groups))
     error_message = "Custom role assignment names must start with AMG_ or SUB_ respectively"
   }
 }

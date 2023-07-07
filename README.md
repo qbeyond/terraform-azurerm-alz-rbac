@@ -10,6 +10,8 @@ The Reader and Owner groups created for subscriptions and management groups are 
 
 The `custom_assignments` input variable allows you to define custom group assignments, including the ability to enable Privileged Identity Management (PIM) for the assignments.
 
+TODO: there is currently no stage variable so this module will run into errors when you have no aad premium license.also in certain development enviroments you have to add the skip `skip_provider_registration` flag.
+
 **Important**: The `management_groups` variable reuses the structure of the `custom_landing_zone` variable from the [caf module](https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/wiki/%5BExamples%5D-Deploy-Custom-Landing-Zone-Archetypes)
 
 <!-- BEGIN_TF_DOCS -->

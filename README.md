@@ -1,5 +1,6 @@
 # Module
-
+[![GitHub tag](https://img.shields.io/github/tag/qbeyond/terraform-module-template.svg)](https://registry.terraform.io/modules/qbeyond/governance-rbac/azurerm/latest)
+[![License](https://img.shields.io/github/license/qbeyond/terraform-module-template.svg)](https://github.com/qbeyond/terraform-azurerm-governance-rbac/blob/main/LICENSE)
 ----
 
 This terraform module creates Azure AD groups and role assignments for management groups and subscriptions. It is specifically designed to work in the governance module that is created by the prerequisites oneshot deployment.

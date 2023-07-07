@@ -1,5 +1,4 @@
 provider "azurerm" {
-  //skip_provider_registration = true #this is only
   features {
 
   }

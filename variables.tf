@@ -27,7 +27,11 @@ variable "custom_groups" {
   ```
   "<group_name>" = {
     pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) 
-    "<role_assignments>" = map(list(string))       (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
+    role_assignments = {
+      "<role_ssignment>" = [
+        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
+      ]
+    }
 }
   ```
   DOC

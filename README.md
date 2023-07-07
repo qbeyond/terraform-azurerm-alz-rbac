@@ -17,7 +17,6 @@ TODO: there is currently no stage variable so this module will run into errors w
 <!-- BEGIN_TF_DOCS -->
 ## Usage
 
-It's very easy to use!
 ```hcl
 provider "azurerm" {
   //skip_provider_registration = true #this is only

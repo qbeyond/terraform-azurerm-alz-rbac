@@ -8,7 +8,7 @@ The module is designed to create default groups (Owner, Contributor, and Reader)
 
 The Reader and Owner groups created for subscriptions and management groups are automatically enabled for Privileged Identity Management (PIM)
 
-The `custom_assignments` input variable allows you to define custom group assignments, including the ability to enable Privileged Identity Management (PIM) for the assignments.
+The `custom_assignments` input variable allows you to define custom groups and assignments, including the ability to enable Privileged Identity Management (PIM) for the groups.
 
 TODO: there is currently no stage variable so this module will run into errors when you have no aad premium license.also in certain development enviroments you have to add the skip `skip_provider_registration` flag.
 

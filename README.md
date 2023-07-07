@@ -20,6 +20,7 @@ TODO: there is currently no stage variable so this module will run into errors w
 It's very easy to use!
 ```hcl
 provider "azurerm" {
+  //skip_provider_registration = true #this is only
   features {
 
   }
@@ -45,10 +46,12 @@ module "alz_rbac" {
   subscriptions     = local.subscriptions_map
   management_groups = local.managements_map
 
-  custom_assignments = {
-    "AMG_ALZ" = {
+  custom_groups = {
+    "AMG_ALZ_OWNER" = {
       pim_enabled = true
-      "Owner"     = ["mg:ALZ"]
+      role_assignments = {
+        "Owner" = ["mg:alz"]
+      }
     }
   }
 }
@@ -65,7 +68,7 @@ module "alz_rbac" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_custom_assignments"></a> [custom\_assignments](#input\_custom\_assignments) | <pre>"<group_name>" = {<br>    pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) <br>    "<role_identifier>" = list(string)        (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br>}</pre> | <pre>map(object({<br>    pim_enabled      = optional(string)<br>    role_identifiers = list(string)<br>  }))</pre> | `{}` | no |
+| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br>    pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) <br>    "<role_assignments>" = map(list(string))       (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br>}</pre> | <pre>map(object({<br>    pim_enabled      = optional(bool)<br>    role_assignments = map(list(string))<br>  }))</pre> | `{}` | no |
 | <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | <pre>"<management_group_id>" = {                 (this variable is reusing the structure of the management groups for custom_landing_zones from the caf module )<br>    displayName = "<management_group_name>"<br>  }</pre> | <pre>map(object({<br>    display_name = string<br>  }))</pre> | `{}` | no |
 | <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | Mapping of subscription names to subscription IDs. | `map(string)` | `{}` | no |
 ## Outputs
@@ -93,14 +96,14 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azuread_group.custom_assignments](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+| [azuread_group.custom_groups](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group.management_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group.management_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group.management_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group.subscription_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group.subscription_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group.subscription_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azurerm_role_assignment.custom_assignments](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.custom_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.management_contributors](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.management_owners](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.management_readers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |

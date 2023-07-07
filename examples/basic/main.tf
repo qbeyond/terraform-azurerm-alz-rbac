@@ -26,7 +26,7 @@ module "alz_rbac" {
 
   custom_assignments = {
     "AMG_ALZ" = {
-      pim_enabled = [true]
+      pim_enabled = true
       "Owner"     = ["mg:ALZ"]
     }
   }

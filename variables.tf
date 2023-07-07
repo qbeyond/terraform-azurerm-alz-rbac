@@ -1,12 +1,6 @@
 variable "subscriptions" {
   type        = map(string)
-  description = <<-DOC
-  ```
-  [
-    "<subscription_name>" = "<subscription_id>"    (list of subscriptions to recieve default group assignments) 
-  ]
-  ```
-  DOC
+  description = "Mapping of subscription names to subscription IDs."
   default     = {}
 }
 
@@ -16,23 +10,30 @@ variable "management_groups" {
   }))
   description = <<-DOC
   ```
-  [
-    "<management_group_name>" = "<management_group_id>"    (list of management groups to recieve default group assignments) 
-  ]
+    "<management_group_id>" = {                 (this variable is reusing the structure of the management groups for custom_landing_zones from the caf module )
+      displayName = "<management_group_name>"
+    }
   ```
   DOC
   default     = {}
 }
 
 variable "custom_assignments" {
-  type        = map(map(list(string)))
+  type = map(object({
+    pim_enabled      = optional(string)
+    role_identifiers = list(string)
+  }))
   description = <<-DOC
   ```
   "<group_name>" = {
-    pim_enabled         = optional(list(string))    (list of service principals that should be added as members) 
-    "<role_identifier>" = list(string)              (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
+    pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) 
+    "<role_identifier>" = list(string)        (<role_identifier> must be a role_definition_name or role_definition_id from azure, every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
 }
   ```
   DOC
   default     = {}
+  validation {
+    condition     = can(regex("^AMG_|^SUB_", keys(var.custom_assignments)))
+    error_message = "Custom role assignment names must start with AMG_ or SUB_ respectively"
+  }
 }

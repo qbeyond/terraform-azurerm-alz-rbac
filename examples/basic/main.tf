@@ -26,7 +26,7 @@ module "alz_rbac" {
 
   custom_groups = {
     "AMG_ALZ_OWNER" = {
-      pim_enabled = true
+      azuread_role_assignable = true
       role_assignments = {
         "Owner" = ["mg:alz"]
       }

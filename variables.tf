@@ -20,13 +20,13 @@ variable "management_groups" {
 
 variable "custom_groups" {
   type = map(object({
-    pim_enabled      = optional(bool)
+    azuread_role_assignable = optional(bool)
     role_assignments = map(list(string))
   }))
   description = <<-DOC
   ```
   "<group_name>" = {
-    pim_enabled         = optional(string)    (if you want the role assignment to be pimmable) 
+    azuread_role_assignable = optional(string)    (if you want to assign Azure AD roles to the group) 
     role_assignments = {
       "<role_assignment>" = [                 (must be a role_definition_name or role_definition_id from azure)
         "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)

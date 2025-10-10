@@ -67,8 +67,9 @@ module "alz_rbac" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br>    azuread_role_assignable = optional(string)    (if you want to assign Azure AD roles to the group) <br>    role_assignments = {<br>      "<role_assignment>" = [                 (must be a role_definition_name or role_definition_id from azure)<br>        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br>      ]<br>    }<br>}</pre> | <pre>map(object({<br>    azuread_role_assignable = optional(bool)<br>    role_assignments = map(list(string))<br>  }))</pre> | `{}` | no |
-| <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | <pre>"<management_group_id>" = {                 (this variable is reusing the structure of the management groups for custom_landing_zones from the caf module )<br>    displayName = "<management_group_name>"<br>  }</pre> | <pre>map(object({<br>    display_name = string<br>  }))</pre> | `{}` | no |
+| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br/>    azuread_role_assignable = optional(string)    (if you want to assign Azure AD roles to the group) <br/>    role_assignments = {<br/>      "<role_assignment>" = [                 (must be a role_definition_name or role_definition_id from azure)<br/>        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br/>      ]<br/>    }<br/>}</pre> | <pre>map(object({<br/>    security_enabled        = optional(bool, true)<br/>    azuread_role_assignable = optional(bool)<br/>    role_assignments        = map(list(string))<br/>  }))</pre> | `{}` | no |
+| <a name="input_groups_config"></a> [groups\_config](#input\_groups\_config) | Optional config for AAD groups by scope and role | <pre>object({<br/>    subscriptions = optional(object({<br/>      owner = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      contributor = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      reader = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>    }))<br/>    management_groups = optional(object({<br/>      owner = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      contributor = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      reader = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>    }))<br/>  })</pre> | `{}` | no |
+| <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | <pre>"<management_group_id>" = {                 (this variable is reusing the structure of the management groups for custom_landing_zones from the caf module )<br/>    displayName = "<management_group_name>"<br/>  }</pre> | <pre>map(object({<br/>    display_name = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | Mapping of subscription names to subscription IDs. | `map(string)` | `{}` | no |
 ## Outputs
 
@@ -76,40 +77,41 @@ module "alz_rbac" {
 |------|-------------|
 | <a name="output_aad_groups"></a> [aad\_groups](#output\_aad\_groups) | All AAD Groups that have been created. |
 
-## Resource types
+      ## Resource types
 
-| Type | Used |
-|------|-------|
-| [azuread_group](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | 7 |
-| [azurerm_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | 7 |
+      | Type | Used |
+      |------|-------|
+        | [azuread_group](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | 7 |
+        | [azurerm_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | 7 |
 
-**`Used` only includes resource blocks.** `for_each` and `count` meta arguments, as well as resource blocks of modules are not considered.
-
+      **`Used` only includes resource blocks.** `for_each` and `count` meta arguments, as well as resource blocks of modules are not considered.
+    
 ## Modules
 
 No modules.
 
-## Resources by Files
+        ## Resources by Files
 
-### main.tf
+            ### main.tf
 
-| Name | Type |
-|------|------|
-| [azuread_group.custom_groups](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azuread_group.management_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azuread_group.management_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azuread_group.management_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azuread_group.subscription_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azuread_group.subscription_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azuread_group.subscription_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
-| [azurerm_role_assignment.custom_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.management_contributors](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.management_owners](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.management_readers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.subscription_contributors](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.subscription_owners](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.subscription_readers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
+            | Name | Type |
+            |------|------|
+                  | [azuread_group.custom_groups](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group.management_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group.management_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group.management_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group.subscription_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group.subscription_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group.subscription_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azurerm_role_assignment.custom_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_role_assignment.management_contributors](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_role_assignment.management_owners](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_role_assignment.management_readers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_role_assignment.subscription_contributors](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_role_assignment.subscription_owners](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_role_assignment.subscription_readers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+                  | [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
+    
 <!-- END_TF_DOCS -->
 
 ## Contribute

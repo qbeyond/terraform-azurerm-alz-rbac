@@ -20,8 +20,9 @@ variable "management_groups" {
 
 variable "custom_groups" {
   type = map(object({
+    security_enabled        = optional(bool, true)
     azuread_role_assignable = optional(bool)
-    role_assignments = map(list(string))
+    role_assignments        = map(list(string))
   }))
   description = <<-DOC
   ```
@@ -43,4 +44,39 @@ variable "custom_groups" {
     ]) == length(var.custom_groups))
     error_message = "Custom role assignment names must start with AMG_ or SUB_ respectively"
   }
+}
+
+variable "groups_config" {
+  description = "Optional config for AAD groups by scope and role"
+  type        = object({
+    subscriptions = optional(object({
+      owner = optional(object({
+        security_enabled   = optional(bool, true)
+        assignable_to_role = optional(bool, false)
+      }))
+      contributor = optional(object({
+        security_enabled   = optional(bool, true)
+        assignable_to_role = optional(bool, false)
+      }))
+      reader = optional(object({
+        security_enabled   = optional(bool, true)
+        assignable_to_role = optional(bool, false)
+      }))
+    }))
+    management_groups = optional(object({
+      owner = optional(object({
+        security_enabled   = optional(bool, true)
+        assignable_to_role = optional(bool, false)
+      }))
+      contributor = optional(object({
+        security_enabled   = optional(bool, true)
+        assignable_to_role = optional(bool, false)
+      }))
+      reader = optional(object({
+        security_enabled   = optional(bool, true)
+        assignable_to_role = optional(bool, false)
+      }))
+    }))
+  })
+  default = {}
 }

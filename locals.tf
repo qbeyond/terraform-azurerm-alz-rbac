@@ -17,6 +17,6 @@ locals {
   pim_targets = merge(
     { for k in keys(var.subscriptions)      : "sub_${k}" => { group_id = azuread_group.subscription_owners[k].object_id } },
     { for k in keys(var.management_groups)  : "mg_${k}"  => { group_id = azuread_group.management_owners[k].object_id } },
-    { for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } if try(v.pim_enabled, false) }
+    { for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } if try(v.azuread_role_assignable, false) }
   )
 }

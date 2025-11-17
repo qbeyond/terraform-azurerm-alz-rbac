@@ -125,13 +125,6 @@ resource "azuread_group_role_management_policy" "pim" {
     }
   }
 
-  expiration_rules {
-    expire_eligible_assignments_after   = var.pim_expire_eligible_assignments_after
-    allow_permanent_eligible_assignment = var.pim_allow_permanent_eligible_assignment
-    allow_permanent_active_assignment   = var.pim_allow_permanent_active_assignment
-    maximum_allowed_duration            = var.pim_maximum_allowed_duration
-  }
-
   notification_rules {
     eligible_activations {
       approver_notifications {

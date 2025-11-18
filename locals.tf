@@ -12,11 +12,19 @@ locals {
           role_definition_name = can(regex("((\\w|\\d){8}-((\\w|\\d){4}-){3}(\\w|\\d){12}$)", role)) ? null : role
           role_definition_id   = can(regex("((\\w|\\d){8}-((\\w|\\d){4}-){3}(\\w|\\d){12}$)", role)) ? format("/providers/Microsoft.Authorization/roleDefinitions/%s", basename(role)) : null
           principal            = group
-  } } : {}]])...)
+  } } : {})])...)
 
-  pim_targets = merge(
-    { for k in keys(var.subscriptions)      : "sub_${k}" => { group_id = azuread_group.subscription_owners[k].object_id } },
-    { for k in keys(var.management_groups)  : "mg_${k}"  => { group_id = azuread_group.management_owners[k].object_id } },
-    { for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } if try(v.azuread_role_assignable, false) }
+  pim_targets_owner = merge(
+    { for k in keys(var.subscriptions)     : "sub_${k}" => { group_id = azuread_group.subscription_owners[k].object_id } },
+    { for k in keys(var.management_groups) : "mg_${k}"  => { group_id = azuread_group.management_owners[k].object_id } }
   )
+
+  pim_targets_contributor = merge(
+    { for k in keys(var.subscriptions) : "sub_${k}_contributor" => { group_id = azuread_group.subscription_contributors[k].object_id } if can(azuread_group.subscription_contributors[k])},
+    { for k in keys(var.management_groups) : "mg_${k}_contributor" => { group_id = azuread_group.management_contributors[k].object_id } if can(azuread_group.management_contributors[k])}
+  )
+
+  pim_targets_custom_groups = {
+    for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } if try(v.azuread_role_assignable, false)
+  }
 }

@@ -134,3 +134,90 @@ resource "azuread_group_role_management_policy" "pim" {
     }
   }
 }
+
+resource "azuread_group_role_management_policy" "pim_owner" {
+  for_each = local.pim_targets_owner
+
+  group_id = each.value.group_id
+  role_id  = "member"
+
+  activation_rules {
+    maximum_duration      = try(var.pim_settings.owner.max_duration, "PT10H")
+    require_justification = try(var.pim_settings.owner.require_justification, true)
+    require_approval      = try(var.pim_settings.owner.require_approval, false)
+
+    approval_stage {
+      primary_approver {
+        type      = "groupMembers"
+        object_id = each.value.group_id
+      }
+    }
+  }
+
+  notification_rules {
+    eligible_activations {
+      approver_notifications {
+        default_recipients = true
+        notification_level = "Critical"
+      }
+    }
+  }
+}
+
+resource "azuread_group_role_management_policy" "pim_contributor" {
+  for_each = local.pim_targets_contributor
+
+  group_id = each.value.group_id
+  role_id  = "member"
+
+  activation_rules {
+    maximum_duration      = try(var.pim_settings.contributor.max_duration, "PT10H")
+    require_justification = try(var.pim_settings.contributor.require_justification, true)
+    require_approval      = try(var.pim_settings.contributor.require_approval, false)
+
+    approval_stage {
+      primary_approver {
+        type      = "groupMembers"
+        object_id = each.value.group_id
+      }
+    }
+  }
+
+  notification_rules {
+    eligible_activations {
+      approver_notifications {
+        default_recipients = true
+        notification_level = "Critical"
+      }
+    }
+  }
+}
+
+resource "azuread_group_role_management_policy" "pim_custom_groups" {
+  for_each = local.pim_targets_custom_groups
+
+  group_id = each.value.group_id
+  role_id  = "member"
+
+  activation_rules {
+    maximum_duration      = try(var.pim_settings.custom_groups[each.key].max_duration, "PT10H")
+    require_justification = try(var.pim_settings.custom_groups[each.key].require_justification, true)
+    require_approval      = try(var.pim_settings.custom_groups[each.key].require_approval, false)
+
+    approval_stage {
+      primary_approver {
+        type      = "groupMembers"
+        object_id = each.value.group_id
+      }
+    }
+  }
+
+  notification_rules {
+    eligible_activations {
+      approver_notifications {
+        default_recipients = true
+        notification_level = "Critical"
+      }
+    }
+  }
+}

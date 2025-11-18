@@ -171,9 +171,9 @@ resource "azuread_group_role_management_policy" "pim_custom_groups" {
   role_id  = "member"
 
   activation_rules {
-    maximum_duration      = try(var.pim_settings.custom_groups[each.key].max_duration, "PT10H")
-    require_justification = try(var.pim_settings.custom_groups[each.key].require_justification, true)
-    require_approval      = try(var.pim_settings.custom_groups[each.key].require_approval, false)
+    maximum_duration      = try(var.custom_groups[each.key].pim_settings.max_duration, try(var.pim_settings.custom_groups[each.key].max_duration, "PT10H"))
+    require_justification = try(var.custom_groups[each.key].pim_settings.require_justification, try(var.pim_settings.custom_groups[each.key].require_justification, true))
+    require_approval      = try(var.custom_groups[each.key].pim_settings.require_approval, try(var.pim_settings.custom_groups[each.key].require_approval, false))
 
     approval_stage {
       primary_approver {

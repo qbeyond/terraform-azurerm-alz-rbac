@@ -117,10 +117,13 @@ resource "azuread_group_role_management_policy" "pim_owner" {
     require_justification = try(var.pim_settings.owner.require_justification, true)
     require_approval      = try(var.pim_settings.owner.require_approval, false)
 
-    approval_stage {
-      primary_approver {
-        type      = "groupMembers"
-        object_id = each.value.group_id
+    dynamic "approval_stage" {
+      for_each = try(var.pim_settings.owner.require_approval, false) ? [1] : []
+      content {
+        primary_approver {
+          type      = "groupMembers"
+          object_id = each.value.group_id
+        }
       }
     }
   }
@@ -146,10 +149,13 @@ resource "azuread_group_role_management_policy" "pim_contributor" {
     require_justification = try(var.pim_settings.contributor.require_justification, true)
     require_approval      = try(var.pim_settings.contributor.require_approval, false)
 
-    approval_stage {
-      primary_approver {
-        type      = "groupMembers"
-        object_id = each.value.group_id
+    dynamic "approval_stage" {
+      for_each = try(var.pim_settings.contributor.require_approval, false) ? [1] : []
+      content {
+        primary_approver {
+          type      = "groupMembers"
+          object_id = each.value.group_id
+        }
       }
     }
   }
@@ -175,10 +181,13 @@ resource "azuread_group_role_management_policy" "pim_custom_groups" {
     require_justification = try(var.custom_groups[each.key].pim_settings.require_justification, try(var.pim_settings.custom_groups[each.key].require_justification, true))
     require_approval      = try(var.custom_groups[each.key].pim_settings.require_approval, try(var.pim_settings.custom_groups[each.key].require_approval, false))
 
-    approval_stage {
-      primary_approver {
-        type      = "groupMembers"
-        object_id = each.value.group_id
+    dynamic "approval_stage" {
+      for_each = try(var.custom_groups[each.key].pim_settings.require_approval, try(var.pim_settings.custom_groups[each.key].require_approval, false)) ? [1] : []
+      content {
+        primary_approver {
+          type      = "groupMembers"
+          object_id = each.value.group_id
+        }
       }
     }
   }

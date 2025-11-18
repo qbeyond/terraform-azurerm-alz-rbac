@@ -23,17 +23,25 @@ variable "custom_groups" {
     security_enabled        = optional(bool, true)
     azuread_role_assignable = optional(bool)
     role_assignments        = map(list(string))
+    pim_settings            = optional(object({
+      max_duration                        = optional(string, "PT10H")
+      require_justification               = optional(bool, true)
+      require_approval                    = optional(bool, false)
+      expire_eligible_assignments_after   = optional(string, "P1Y")
+      allow_permanent_eligible_assignment = optional(bool, false)
+      allow_permanent_active_assignment   = optional(bool, false)
+      maximum_allowed_duration            = optional(string, "P1Y")
+    }))
   }))
   description = <<-DOC
   ```
   "<group_name>" = {
-    azuread_role_assignable = optional(string)    (if you want to assign Azure AD roles to the group) 
+    azuread_role_assignable = optional(bool)
     role_assignments = {
-      "<role_assignment>" = [                 (must be a role_definition_name or role_definition_id from azure)
-        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
-      ]
+      "<role_assignment>" = ["<scope>"]
     }
-}
+    pim_settings = optional({...})  (individual PIM settings for this group)
+  }
   ```
   DOC
   default     = {}

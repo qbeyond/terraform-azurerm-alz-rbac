@@ -106,35 +106,6 @@ resource "azurerm_role_assignment" "management_readers" {
   principal_id         = azuread_group.management_readers[each.key].object_id
 }
 
-resource "azuread_group_role_management_policy" "pim" {
-  for_each = local.pim_targets
-
-  group_id = each.value.group_id
-  role_id  = "member"
-
-  activation_rules {
-    maximum_duration      = var.pim_max_duration
-    require_justification = var.pim_require_justification
-    require_approval      = var.pim_require_approval
-
-    approval_stage {
-      primary_approver {
-        type      = "groupMembers"
-        object_id = each.value.group_id
-      }
-    }
-  }
-
-  notification_rules {
-    eligible_activations {
-      approver_notifications {
-        default_recipients = true
-        notification_level = "Critical"
-      }
-    }
-  }
-}
-
 resource "azuread_group_role_management_policy" "pim_owner" {
   for_each = local.pim_targets_owner
 

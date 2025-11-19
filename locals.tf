@@ -45,11 +45,14 @@ locals {
 
   pim_targets_custom_groups = {
     for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } 
-    if try(v.azuread_role_assignable, false) && try(v.pim_settings, null) != null
+    if try(v.azuread_role_assignable, false) && 
+       try(v.pim_settings, null) != null &&
+       try(length(v.role_assignments) > 0, false)
   }
   // Only includes custom groups that are:
   // 1. Marked as azuread_role_assignable = true
   // 2. Have pim_settings defined
+  // 3. Have at least one role assignment
 
   pim_targets = merge(
     // Combines all three maps into a single unified map containing:

@@ -44,17 +44,12 @@ locals {
   // Result: A map of all contributor groups that actually exist, across subscriptions and management groups
 
   pim_targets_custom_groups = {
-    // For loop: Iterate over var.custom_groups as key-value pairs
-    // k = custom group name, v = custom group configuration object
-    // Create an entry for each custom group using its name as the key
-    // Value: An object containing the group_id from the corresponding custom_groups Azure AD group's object_id
-    // The "if try(v.azuread_role_assignable, false)" condition:
-    //   - Checks if the custom group has azuread_role_assignable = true
-    //   - If the attribute doesn't exist, defaults to false
-    //   - Only includes groups where azuread_role_assignable is explicitly set to true
-    for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } if try(v.azuread_role_assignable, false)
+    for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } 
+    if try(v.azuread_role_assignable, false) && try(v.pim_settings, null) != null
   }
-  // Result: A map of only the custom groups that are marked as role-assignable in Azure AD
+  // Only includes custom groups that are:
+  // 1. Marked as azuread_role_assignable = true
+  // 2. Have pim_settings defined
 
   pim_targets = merge(
     // Combines all three maps into a single unified map containing:

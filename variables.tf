@@ -24,13 +24,10 @@ variable "custom_groups" {
     azuread_role_assignable = optional(bool)
     role_assignments        = map(list(string))
     pim_settings            = optional(object({
-      max_duration                        = optional(string, "PT10H")
-      require_justification               = optional(bool, true)
-      require_approval                    = optional(bool, false)
-      expire_eligible_assignments_after   = optional(string, "P1Y")
-      allow_permanent_eligible_assignment = optional(bool, false)
-      allow_permanent_active_assignment   = optional(bool, false)
-      maximum_allowed_duration            = optional(string, "P1Y")
+      max_duration          = optional(string, "PT10H")
+      require_justification = optional(bool, true)
+      require_approval      = optional(bool, false)
+      approver_group_id     = optional(string)
     }))
   }))
   description = <<-DOC

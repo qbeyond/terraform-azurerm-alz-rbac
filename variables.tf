@@ -92,26 +92,34 @@ variable "groups_config" {
 variable "pim_settings" {
   type = object({
     owner = optional(object({
-      max_duration                        = optional(string, "PT10H")
-      require_justification               = optional(bool, true)
-      require_approval                    = optional(bool, false)
-      expire_eligible_assignments_after   = optional(string, "P1Y")
-      allow_permanent_eligible_assignment = optional(bool, false)
-      allow_permanent_active_assignment   = optional(bool, false)
-      maximum_allowed_duration            = optional(string, "P1Y")
-      approver_group_id                   = optional(string)
+      max_duration          = optional(string, "PT10H")
+      require_justification = optional(bool, true)
+      require_approval      = optional(bool, false)
+      approver_group_id     = optional(string)
     }))
     contributor = optional(object({
-      max_duration                        = optional(string, "PT10H")
-      require_justification               = optional(bool, true)
-      require_approval                    = optional(bool, false)
-      expire_eligible_assignments_after   = optional(string, "P1Y")
-      allow_permanent_eligible_assignment = optional(bool, false)
-      allow_permanent_active_assignment   = optional(bool, false)
-      maximum_allowed_duration            = optional(string, "P1Y")
-      approver_group_id                   = optional(string)
+      max_duration          = optional(string, "PT10H")
+      require_justification = optional(bool, true)
+      require_approval      = optional(bool, false)
+      approver_group_id     = optional(string)
     }))
   })
   default     = {}
-  description = "PIM settings configuration for Owner and Contributor roles with individual ISO 8601 duration settings and optional approver groups."
+  description = "PIM settings configuration for Owner and Contributor roles"
+
+  validation {
+    condition = (
+      try(var.pim_settings.owner.require_approval, false) == false ||
+      try(var.pim_settings.owner.approver_group_id, null) != null
+    )
+    error_message = "When owner require_approval is true, approver_group_id must be provided."
+  }
+
+  validation {
+    condition = (
+      try(var.pim_settings.contributor.require_approval, false) == false ||
+      try(var.pim_settings.contributor.approver_group_id, null) != null
+    )
+    error_message = "When contributor require_approval is true, approver_group_id must be provided."
+  }
 }

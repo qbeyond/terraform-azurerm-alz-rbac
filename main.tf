@@ -122,7 +122,7 @@ resource "azuread_group_role_management_policy" "pim_owner" {
       content {
         primary_approver {
           type      = "groupMembers"
-          object_id = each.value.group_id
+          object_id = var.pim_settings.owner.approver_group_id
         }
       }
     }
@@ -154,7 +154,7 @@ resource "azuread_group_role_management_policy" "pim_contributor" {
       content {
         primary_approver {
           type      = "groupMembers"
-          object_id = each.value.group_id
+          object_id = var.pim_settings.contributor.approver_group_id
         }
       }
     }
@@ -177,16 +177,16 @@ resource "azuread_group_role_management_policy" "pim_custom_groups" {
   role_id  = "member"
 
   activation_rules {
-    maximum_duration      = try(var.custom_groups[each.key].pim_settings.max_duration, try(var.pim_settings.custom_groups[each.key].max_duration, "PT10H"))
-    require_justification = try(var.custom_groups[each.key].pim_settings.require_justification, try(var.pim_settings.custom_groups[each.key].require_justification, true))
-    require_approval      = try(var.custom_groups[each.key].pim_settings.require_approval, try(var.pim_settings.custom_groups[each.key].require_approval, false))
+    maximum_duration      = try(var.custom_groups[each.key].pim_settings.max_duration, "PT10H")
+    require_justification = try(var.custom_groups[each.key].pim_settings.require_justification, true)
+    require_approval      = try(var.custom_groups[each.key].pim_settings.require_approval, false)
 
     dynamic "approval_stage" {
-      for_each = try(var.custom_groups[each.key].pim_settings.require_approval, try(var.pim_settings.custom_groups[each.key].require_approval, false)) ? [1] : []
+      for_each = try(var.custom_groups[each.key].pim_settings.require_approval, false) ? [1] : []
       content {
         primary_approver {
           type      = "groupMembers"
-          object_id = each.value.group_id
+          object_id = var.custom_groups[each.key].pim_settings.approver_group_id
         }
       }
     }

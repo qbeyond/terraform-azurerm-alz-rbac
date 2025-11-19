@@ -32,16 +32,13 @@ locals {
   // Example result: { "sub_production" = { group_id = "uuid-1" }, "mg_root" = { group_id = "uuid-2" } }
 
   pim_targets_contributor = merge(
-    // Create entries with key format
-    // The "if can(...)" condition checks if the azuread_group.subscription_contributors[k] resource exists
-    // If the group doesn't exist, this entry is skipped (prevents errors for missing resources)
-    { for k in keys(var.subscriptions) : "sub_${k}_contributor" => { group_id = azuread_group.subscription_contributors[k].object_id } if can(azuread_group.subscription_contributors[k])},
+    // For subscriptions: Always include since we always create subscription_contributors
+    { for k in keys(var.subscriptions) : "sub_${k}_contributor" => { group_id = azuread_group.subscription_contributors[k].object_id } },
     
-    // Create entries with key format
-    // The "if can(...)" condition skips entries where the contributor group doesn't exist
-    { for k in keys(var.management_groups) : "mg_${k}_contributor" => { group_id = azuread_group.management_contributors[k].object_id } if can(azuread_group.management_contributors[k])}
+    // For management groups: Always include since we always create management_contributors
+    { for k in keys(var.management_groups) : "mg_${k}_contributor" => { group_id = azuread_group.management_contributors[k].object_id } }
   )
-  // Result: A map of all contributor groups that actually exist, across subscriptions and management groups
+  // Result: A map of all contributor groups for subscriptions and management groups
 
   pim_targets_custom_groups = {
     for k, v in var.custom_groups : k => { group_id = azuread_group.custom_groups[k].object_id } 

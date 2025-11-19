@@ -99,6 +99,7 @@ variable "pim_settings" {
       allow_permanent_eligible_assignment = optional(bool, false)
       allow_permanent_active_assignment   = optional(bool, false)
       maximum_allowed_duration            = optional(string, "P1Y")
+      approver_group_id                   = optional(string)
     }))
     contributor = optional(object({
       max_duration                        = optional(string, "PT10H")
@@ -108,17 +109,9 @@ variable "pim_settings" {
       allow_permanent_eligible_assignment = optional(bool, false)
       allow_permanent_active_assignment   = optional(bool, false)
       maximum_allowed_duration            = optional(string, "P1Y")
+      approver_group_id                   = optional(string)
     }))
-    custom_groups = optional(map(object({
-      max_duration                        = optional(string, "PT10H")
-      require_justification               = optional(bool, true)
-      require_approval                    = optional(bool, false)
-      expire_eligible_assignments_after   = optional(string, "P1Y")
-      allow_permanent_eligible_assignment = optional(bool, false)
-      allow_permanent_active_assignment   = optional(bool, false)
-      maximum_allowed_duration            = optional(string, "P1Y")
-    })), {})
   })
   default     = {}
-  description = "PIM settings configuration for Owner, Contributor, and Custom Groups with individual ISO 8601 duration settings."
+  description = "PIM settings configuration for Owner and Contributor roles with individual ISO 8601 duration settings and optional approver groups."
 }

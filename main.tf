@@ -136,6 +136,8 @@ resource "azuread_group_role_management_policy" "pim_owner" {
       }
     }
   }
+
+  depends_on = [ azurerm_role_assignment.custom_groups ]
 }
 
 resource "azuread_group_role_management_policy" "pim_contributor" {
@@ -168,6 +170,8 @@ resource "azuread_group_role_management_policy" "pim_contributor" {
       }
     }
   }
+
+  depends_on = [ azurerm_role_assignment.custom_groups ]
 }
 
 resource "azuread_group_role_management_policy" "pim_custom_groups" {
@@ -200,4 +204,6 @@ resource "azuread_group_role_management_policy" "pim_custom_groups" {
       }
     }
   }
+
+  depends_on = [ azurerm_role_assignment.custom_groups ]
 }

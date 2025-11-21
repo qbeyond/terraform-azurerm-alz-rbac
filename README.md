@@ -27,7 +27,7 @@ TODO: there is currently no stage variable so this module will run into errors w
 
 ## Required Permissions
 
-To manage PIM policies for Azure AD groups, the Service Principal requires:
+To manage PIM policies for Azure AD groups, the Service Principal requires [Graph Permission](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy):
 
 - `RoleManagementPolicy.ReadWrite.AzureADGroup`
 

@@ -19,7 +19,7 @@ and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ### Required Permissions
 
-- Service Principal requires `RoleManagementPolicy.ReadWrite.AzureADGroup` permission to manage PIM policies for Azure AD groups
+- Service Principal requires `RoleManagementPolicy.ReadWrite.AzureADGroup` [Graph permission](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy) to manage PIM policies for Azure AD groups
 
 ## [2.1.1] - 2025-10-16
 

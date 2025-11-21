@@ -1,19 +1,36 @@
 # Module
-[![GitHub tag](https://img.shields.io/github/tag/qbeyond/terraform-azurerm-alz-rbac.svg)](https://registry.terraform.io/modules/qbeyond/alz-rbac/azurerm/latest)
+[![GitHub tag](https://img.shields.io/github/tag/qbeyond/terraform-azurerm-alz-rbac.svg)](https://registry.terraform.io/modules/qbeyond/alz-rbac/azurerm/latest)  
 [![License](https://img.shields.io/github/license/qbeyond/terraform-azurerm-alz-rbac.svg)](https://github.com/qbeyond/terraform-azurerm-alz-rbac/blob/main/LICENSE)
+
 ----
 
 This terraform module creates Azure AD groups and role assignments for management groups and subscriptions. It is specifically designed to work in the governance module that is created by the prerequisites oneshot deployment.
 
 The module is designed to create default groups (Owner, Contributor, and Reader) and assignments for the specified subscriptions and management groups. The module automatically generates the name of the group by prefixing it with `SUB_` for subscriptions and `AMG_` for management groups and adds the role as a suffix.
 
-The Contributor and Owner groups created for subscriptions and management groups are automatically enabled for Privileged Identity Management (PIM)
+The Contributor and Owner groups created for subscriptions and management groups are automatically enabled for Privileged Identity Management (PIM).
 
-The `custom_assignments` input variable allows you to define custom groups and assignments, including the ability to enable Privileged Identity Management (PIM) for the groups.
+Custom groups can also be configured with full PIM support.  
+This includes:
+
+- enabling PIM for custom Azure AD groups  
+- defining individual activation rules per group  
+- overriding global PIM defaults per group  
+- rendering approval stages only when requested  
+- supporting mixed setups of assignable and non-assignable groups  
+
+The `custom_assignments` input variable allows you to define custom groups and assignments, including enabling PIM through the new `pim_settings` object.
 
 TODO: there is currently no stage variable so this module will run into errors when you have no AAD premium license.
 
 **Important**: The `management_groups` variable reuses the structure of the `custom_landing_zone` variable from the [CAF module](https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/wiki/%5BExamples%5D-Deploy-Custom-Landing-Zone-Archetypes)
+
+## Required Permissions
+
+To manage PIM policies for Azure AD groups, the Service Principal requires:
+
+- `RoleManagementPolicy.ReadWrite.AzureADGroup`
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Usage
@@ -114,7 +131,7 @@ No modules.
     
 <!-- END_TF_DOCS -->
 
-## Contribute
+## Contribute 
 
 Please use Pull requests to contribute.
 

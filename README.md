@@ -60,16 +60,17 @@ module "alz_rbac" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.39.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.63.0 |
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | >= 3.0.2 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.108.0 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br/>    azuread_role_assignable = optional(string)    (if you want to assign Azure AD roles to the group) <br/>    role_assignments = {<br/>      "<role_assignment>" = [                 (must be a role_definition_name or role_definition_id from azure)<br/>        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)<br/>      ]<br/>    }<br/>}</pre> | <pre>map(object({<br/>    security_enabled        = optional(bool, true)<br/>    azuread_role_assignable = optional(bool)<br/>    role_assignments        = map(list(string))<br/>  }))</pre> | `{}` | no |
+| <a name="input_custom_groups"></a> [custom\_groups](#input\_custom\_groups) | <pre>"<group_name>" = {<br/>  azuread_role_assignable = optional(bool)<br/>  role_assignments = {<br/>    "<role_assignment>" = ["<scope>"]<br/>  }<br/>  pim_settings = optional({...})  (individual PIM settings for this group)<br/>}</pre> | <pre>map(object({<br/>    security_enabled        = optional(bool, true)<br/>    azuread_role_assignable = optional(bool)<br/>    role_assignments        = map(list(string))<br/>    pim_settings            = optional(object({<br/>      max_duration          = optional(string, "PT10H")<br/>      require_justification = optional(bool, true)<br/>      require_approval      = optional(bool, false)<br/>      approver_group_id     = optional(string)<br/>    }))<br/>  }))</pre> | `{}` | no |
 | <a name="input_groups_config"></a> [groups\_config](#input\_groups\_config) | Optional config for AAD groups by scope and role | <pre>object({<br/>    subscriptions = optional(object({<br/>      owner = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      contributor = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      reader = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>    }))<br/>    management_groups = optional(object({<br/>      owner = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      contributor = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>      reader = optional(object({<br/>        security_enabled   = optional(bool, true)<br/>        assignable_to_role = optional(bool, false)<br/>      }))<br/>    }))<br/>  })</pre> | `{}` | no |
 | <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | <pre>"<management_group_id>" = {                 (this variable is reusing the structure of the management groups for custom_landing_zones from the caf module )<br/>    displayName = "<management_group_name>"<br/>  }</pre> | <pre>map(object({<br/>    display_name = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_pim_settings"></a> [pim\_settings](#input\_pim\_settings) | PIM settings configuration for Owner and Contributor roles | <pre>object({<br/>    owner = optional(object({<br/>      max_duration          = optional(string, "PT10H")<br/>      require_justification = optional(bool, true)<br/>      require_approval      = optional(bool, false)<br/>      approver_group_id     = optional(string)<br/>    }))<br/>    contributor = optional(object({<br/>      max_duration          = optional(string, "PT10H")<br/>      require_justification = optional(bool, true)<br/>      require_approval      = optional(bool, false)<br/>      approver_group_id     = optional(string)<br/>    }))<br/>  })</pre> | `{}` | no |
 | <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | Mapping of subscription names to subscription IDs. | `map(string)` | `{}` | no |
 ## Outputs
 
@@ -82,6 +83,7 @@ module "alz_rbac" {
       | Type | Used |
       |------|-------|
         | [azuread_group](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | 7 |
+        | [azuread_group_role_management_policy](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy) | 3 |
         | [azurerm_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | 7 |
 
       **`Used` only includes resource blocks.** `for_each` and `count` meta arguments, as well as resource blocks of modules are not considered.
@@ -103,6 +105,9 @@ No modules.
                   | [azuread_group.subscription_contributors](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
                   | [azuread_group.subscription_owners](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
                   | [azuread_group.subscription_readers](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
+                  | [azuread_group_role_management_policy.pim_contributor](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy) | resource |
+                  | [azuread_group_role_management_policy.pim_custom_groups](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy) | resource |
+                  | [azuread_group_role_management_policy.pim_owner](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy) | resource |
                   | [azurerm_role_assignment.custom_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
                   | [azurerm_role_assignment.management_contributors](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
                   | [azurerm_role_assignment.management_owners](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |

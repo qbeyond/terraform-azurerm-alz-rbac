@@ -105,3 +105,105 @@ resource "azurerm_role_assignment" "management_readers" {
   role_definition_name = "Reader"
   principal_id         = azuread_group.management_readers[each.key].object_id
 }
+
+resource "azuread_group_role_management_policy" "pim_owner" {
+  for_each = local.pim_targets_owner
+
+  group_id = each.value.group_id
+  role_id  = "member"
+
+  activation_rules {
+    maximum_duration      = try(var.pim_settings.owner.max_duration, "PT10H")
+    require_justification = try(var.pim_settings.owner.require_justification, true)
+    require_approval      = try(var.pim_settings.owner.require_approval, false)
+
+    dynamic "approval_stage" {
+      for_each = try(var.pim_settings.owner.require_approval, false) ? [1] : []
+      content {
+        primary_approver {
+          type      = "groupMembers"
+          object_id = var.pim_settings.owner.approver_group_id
+        }
+      }
+    }
+  }
+
+  notification_rules {
+    eligible_activations {
+      approver_notifications {
+        default_recipients = true
+        notification_level = "Critical"
+      }
+    }
+  }
+
+  depends_on = [ azurerm_role_assignment.custom_groups ]
+}
+
+resource "azuread_group_role_management_policy" "pim_contributor" {
+  for_each = local.pim_targets_contributor
+
+  group_id = each.value.group_id
+  role_id  = "member"
+
+  activation_rules {
+    maximum_duration      = try(var.pim_settings.contributor.max_duration, "PT10H")
+    require_justification = try(var.pim_settings.contributor.require_justification, true)
+    require_approval      = try(var.pim_settings.contributor.require_approval, false)
+
+    dynamic "approval_stage" {
+      for_each = try(var.pim_settings.contributor.require_approval, false) ? [1] : []
+      content {
+        primary_approver {
+          type      = "groupMembers"
+          object_id = var.pim_settings.contributor.approver_group_id
+        }
+      }
+    }
+  }
+
+  notification_rules {
+    eligible_activations {
+      approver_notifications {
+        default_recipients = true
+        notification_level = "Critical"
+      }
+    }
+  }
+
+  depends_on = [ azurerm_role_assignment.custom_groups ]
+}
+
+resource "azuread_group_role_management_policy" "pim_custom_groups" {
+  for_each = local.pim_targets_custom_groups
+
+  group_id = each.value.group_id
+  role_id  = "member"
+
+  activation_rules {
+    maximum_duration      = try(var.custom_groups[each.key].pim_settings.max_duration, "PT10H")
+    require_justification = try(var.custom_groups[each.key].pim_settings.require_justification, true)
+    require_approval      = try(var.custom_groups[each.key].pim_settings.require_approval, false)
+
+    dynamic "approval_stage" {
+      for_each = try(var.custom_groups[each.key].pim_settings.require_approval, false) ? [1] : []
+      content {
+        primary_approver {
+          type      = "groupMembers"
+          object_id = var.custom_groups[each.key].pim_settings.approver_group_id
+        }
+      }
+    }
+  }
+
+  notification_rules {
+    eligible_activations {
+      approver_notifications {
+        default_recipients = true
+        notification_level = "Critical"
+      }
+    }
+  }
+
+  depends_on = [ azurerm_role_assignment.custom_groups ]
+}

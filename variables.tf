@@ -23,17 +23,22 @@ variable "custom_groups" {
     security_enabled        = optional(bool, true)
     azuread_role_assignable = optional(bool)
     role_assignments        = map(list(string))
+    pim_settings            = optional(object({
+      max_duration          = optional(string, "PT10H")
+      require_justification = optional(bool, true)
+      require_approval      = optional(bool, false)
+      approver_group_id     = optional(string)
+    }))
   }))
   description = <<-DOC
   ```
   "<group_name>" = {
-    azuread_role_assignable = optional(string)    (if you want to assign Azure AD roles to the group) 
+    azuread_role_assignable = optional(bool)
     role_assignments = {
-      "<role_assignment>" = [                 (must be a role_definition_name or role_definition_id from azure)
-        "<scope>"                             (every element must be a scope: "mg:<mg_id>", "sub:<subscription_id>", "root" for Tenant Root Group or a full scope ID)
-      ]
+      "<role_assignment>" = ["<scope>"]
     }
-}
+    pim_settings = optional({...})  (individual PIM settings for this group)
+  }
   ```
   DOC
   default     = {}
@@ -79,4 +84,39 @@ variable "groups_config" {
     }))
   })
   default = {}
+}
+
+variable "pim_settings" {
+  type = object({
+    owner = optional(object({
+      max_duration          = optional(string, "PT10H")
+      require_justification = optional(bool, true)
+      require_approval      = optional(bool, false)
+      approver_group_id     = optional(string)
+    }))
+    contributor = optional(object({
+      max_duration          = optional(string, "PT10H")
+      require_justification = optional(bool, true)
+      require_approval      = optional(bool, false)
+      approver_group_id     = optional(string)
+    }))
+  })
+  default     = {}
+  description = "PIM settings configuration for Owner and Contributor roles"
+
+  validation {
+    condition = (
+      try(var.pim_settings.owner.require_approval, false) == false ||
+      try(var.pim_settings.owner.approver_group_id, null) != null
+    )
+    error_message = "When owner require_approval is true, approver_group_id must be provided."
+  }
+
+  validation {
+    condition = (
+      try(var.pim_settings.contributor.require_approval, false) == false ||
+      try(var.pim_settings.contributor.approver_group_id, null) != null
+    )
+    error_message = "When contributor require_approval is true, approver_group_id must be provided."
+  }
 }

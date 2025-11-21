@@ -4,6 +4,19 @@ All notable changes to this module will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added support for PIM-enabled Azure AD groups with customizable activation rules (for owner, contributor, and custom groups)
+- Added support for individual PIM settings per custom group via `pim_settings` object in `custom_groups` variable
+- Added conditional `approval_stage` blocks in PIM policies that only render when `require_approval` is `true`
+
+### Changed
+
+- Enhanced PIM policy resources to support group-specific PIM configurations with fallback to global defaults
+- Improved `pim_custom_groups` local to filter groups based on `azuread_role_assignable`, `pim_settings`, and role assignments
+
 ## [2.1.1] - 2025-10-16
 
 ### Fixed

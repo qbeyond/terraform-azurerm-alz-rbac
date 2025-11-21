@@ -17,6 +17,10 @@ and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - Enhanced PIM policy resources to support group-specific PIM configurations with fallback to global defaults
 - Improved `pim_custom_groups` local to filter groups based on `azuread_role_assignable`, `pim_settings`, and role assignments
 
+### Required Permissions
+
+- Service Principal requires `RoleManagementPolicy.ReadWrite.AzureADGroup` permission to manage PIM policies for Azure AD groups
+
 ## [2.1.1] - 2025-10-16
 
 ### Fixed

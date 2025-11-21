@@ -4,7 +4,7 @@ All notable changes to this module will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.0.0]
 
 ### Added
 
@@ -16,6 +16,10 @@ and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 - Enhanced PIM policy resources to support group-specific PIM configurations with fallback to global defaults
 - Improved `pim_custom_groups` local to filter groups based on `azuread_role_assignable`, `pim_settings`, and role assignments
+
+### Required Permissions
+
+- Service Principal requires `RoleManagementPolicy.ReadWrite.AzureADGroup` [Graph permission](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_role_management_policy) to manage PIM policies for Azure AD groups
 
 ## [2.1.1] - 2025-10-16
 
